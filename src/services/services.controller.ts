@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { Services } from './service.entity';
 
@@ -7,21 +7,32 @@ export class ServicesController {
     constructor(private readonly servicesService: ServicesService) {}
 
     @Get()
-    findAll(): Promise<Services[]> {
-        return this.servicesService.findAll();
+    async findAll(): Promise<Services[]> {
+        return await this.servicesService.findAll();
     }
+
     @Get(':id')
-    findOne(@Param('id')id: string): Promise<Services> {
-        return this.servicesService.findOne(+id);
+    async findOne(@Param('id') id: string): Promise<Services> {
+        return await this.servicesService.findOne(+id);
     }
 
     @Post()
-    create(@Body() services: Services): Promise<Services> {
-        return this.servicesService.create(services);
+    @HttpCode(HttpStatus.CREATED)
+    async create(@Body() services: Services): Promise<Services> {
+        return await this.servicesService.create(services);
     }
 
-    @Delete()
-    remove(@Param('id') id: number): Promise<void> {
-        return this.servicesService.removeEventListener(+id);
+    @Patch(':id')
+    async update(
+        @Param('id') id: string,
+        @Body() updateData: Partial<Services>,
+    ): Promise<Services> {
+        return await this.servicesService.update(+id, updateData);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async remove(@Param('id') id: string): Promise<void> {
+        return await this.servicesService.remove(+id);
     }
 }

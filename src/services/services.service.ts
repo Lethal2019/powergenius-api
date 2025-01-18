@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Services } from './service.entity';
 import { Repository } from 'typeorm';
@@ -10,19 +10,34 @@ export class ServicesService {
         private servicesRepository: Repository<Services>,
     ) {}
 
-    findAll(): Promise<Services[]> {
-        return this.servicesRepository.find();
+    async findAll(): Promise<Services[]> {
+        return await this.servicesRepository.find();
     }
 
-    findOne(id: number): Promise<Services> {
-        return this.servicesRepository.findOneBy({id});
+    async findOne(id: number): Promise<Services> {
+        const service = await this.servicesRepository.findOneBy({ id });
+        if (!service) {
+            throw new NotFoundException(`Service with ID ${id} not found.`);
+        }
+        return service;
     }
 
-    create(services: Services): Promise<Services> {
-        return this.servicesRepository.save(services);
+    async create(services: Services): Promise<Services> {
+        return await this.servicesRepository.save(services);
     }
 
-    async removeEventListener(id: number): Promise <void> {
-        await this.servicesRepository.delete(id);
+    async update(id: number, updateData: Partial<Services>): Promise<Services> {
+        const service = await this.findOne(id);
+        return await this.servicesRepository.save({
+            ...service,
+            ...updateData,
+        });
+    }
+
+    async remove(id: number): Promise<void> {
+        const result = await this.servicesRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException(`Service with ID ${id} not found.`);
+        }
     }
 }

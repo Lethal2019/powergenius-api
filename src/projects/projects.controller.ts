@@ -1,27 +1,39 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { Projects } from './projects.entity';
 
+
 @Controller('projects')
 export class ProjectsController {
-    constructor(private readonly projectService: ProjectsService) {}
+    constructor(private readonly projectsService: ProjectsService) {}
 
     @Get()
-    findAll(): Promise<Projects[]> {
-        return this.projectService.findAll();
+    async findAll(): Promise<Projects[]> {
+        return await this.projectsService.findAll();
     }
+
     @Get(':id')
-    findOne(@Param('id')id: string): Promise<Projects> {
-        return this.projectService.findOne(+id);
+    async findOne(@Param('id') id: string): Promise<Projects> {
+        return await this.projectsService.findOne(+id);
     }
 
     @Post()
-    create(@Body() services: Projects): Promise<Projects> {
-        return this.projectService.create(services);
+    @HttpCode(HttpStatus.CREATED)
+    async create(@Body() projects: Projects): Promise<Projects> {
+        return await this.projectsService.create(projects);
     }
 
-    @Delete()
-    remove(@Param('id') id: number): Promise<void> {
-        return this.projectService.removeEventListener(+id);
+    @Patch(':id')
+    async update(
+        @Param('id') id: string,
+        @Body() updateData: Partial<Projects>,
+    ): Promise<Projects> {
+        return await this.projectsService.update(+id, updateData);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async remove(@Param('id') id: string): Promise<void> {
+        return await this.projectsService.remove(+id);
     }
 }
