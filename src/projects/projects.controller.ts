@@ -2,7 +2,6 @@ import { Controller, Get, Post, Patch, Delete, Param, Body, HttpCode, HttpStatus
 import { ProjectsService } from './projects.service';
 import { Projects } from './projects.entity';
 
-
 @Controller('projects')
 export class ProjectsController {
     constructor(private readonly projectsService: ProjectsService) {}

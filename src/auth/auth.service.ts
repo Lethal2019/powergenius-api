@@ -15,13 +15,13 @@ export class AuthService {
         const user = await this.userService.findOne(username);
 
         if (!user) {
-            throw new TypeError('username or password does not match');
+            throw new UnauthorizedException('user not found');
         }
 
         const res = await bcrypt.compare(pass, user?.password);
 
         if(!res) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('username or password does not match');
         }
         const payload = { sub: user.id, username: user.username };
 
