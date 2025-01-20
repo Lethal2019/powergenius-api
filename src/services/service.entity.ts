@@ -11,4 +11,7 @@ export class Services{
 
     @Column({type: 'text'})
     service_description: string;
+
+    @Column({nullable: true})
+    service_image: string;
 }

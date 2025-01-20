@@ -1,7 +1,23 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { 
+    Controller, 
+    Get, 
+    Post, 
+    Patch, 
+    Delete, 
+    Param, 
+    Body, 
+    HttpCode, 
+    HttpStatus, 
+    UseInterceptors, 
+    UploadedFile 
+} from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { Services } from './service.entity';
 import { Public } from 'src/auth/SkipAuth';
+import { FileInterceptor } from '@nestjs/platform-express';
+import * as path from 'path';
+import { diskStorage } from 'multer';
+import {Multer} from 'multer';
 
 @Controller('services')
 export class ServicesController {
@@ -22,8 +38,21 @@ export class ServicesController {
     @Public()
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() services: Services): Promise<Services> {
-        return await this.servicesService.create(services);
+    @UseInterceptors(FileInterceptor('service_image', {
+        storage: diskStorage({
+            destination: './uploads',
+            filename: (req, file, cb) => {
+                const filename = `${Date.now()}-${path.parse(file.originalname).name}${path.extname(file.originalname)}`;
+                cb(null, filename);
+            },
+        }),
+    }))
+    async create(
+        @Body() services: Partial<Services>,
+        @UploadedFile() file: Express.Multer.File,
+    ): Promise<Services> {
+        services.service_image = file ? `/uploads/${file.filename}` : null;
+        return await this.servicesService.create(services as Services);
     }
 
     @Public()
