@@ -11,8 +11,8 @@ import {join} from 'path';
   imports:[
     TypeOrmModule.forFeature([Services]),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: 'uploads',
+      rootPath: join(__dirname,'..', '..', 'uploads'),
+      serveRoot: '/uploads',
     }),
   ],
   controllers: [ServicesController],
