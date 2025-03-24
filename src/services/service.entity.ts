@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Services{
@@ -14,4 +14,7 @@ export class Services{
 
     @Column({nullable: true})
     service_image: string;
+
+    @CreateDateColumn({ type: 'timestamp' })
+    created_date: Date;
 }
