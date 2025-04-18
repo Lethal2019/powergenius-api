@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, NotFoundException, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { Public } from 'src/auth/SkipAuth';
+import { CreateUserDto } from './create-user.dto';
+import { UpdateUserDto } from './update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -21,8 +23,25 @@ export class UserController {
 
   @Public()
   @Post()
-  create(@Body() user: User): Promise<User> {
+  create(@Body() user: CreateUserDto): Promise<User> {
     return this.userService.create(user);
+  }
+
+  @Put(':username')
+  async update(
+    @Param('username') username: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    const updatedUser = await this.userService.updateByUsername(
+      username,
+      updateUserDto,
+    );
+
+    if (!updatedUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    return updatedUser;
   }
 
   @Public()

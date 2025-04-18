@@ -7,6 +7,7 @@ import { ServicesModule } from './services/services.module';
 import { ProjectsModule } from './projects/projects.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: 
@@ -29,7 +30,8 @@ import { AuthModule } from './auth/auth.module';
     ServicesModule,
     ProjectsModule,
     UserModule,
-    AuthModule
+    AuthModule,
+    FeedbackModule
   ],
   controllers: [AppController],
   providers: [AppService],
