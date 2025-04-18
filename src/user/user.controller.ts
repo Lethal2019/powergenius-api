@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, NotFoundException, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, NotFoundException, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { Public } from 'src/auth/SkipAuth';
@@ -27,7 +27,8 @@ export class UserController {
     return this.userService.create(user);
   }
 
-  @Put(':username')
+  @Public()
+  @Patch(':username')
   async update(
     @Param('username') username: string,
     @Body() updateUserDto: UpdateUserDto,
