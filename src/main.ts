@@ -13,21 +13,10 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        'http://localhost:3000', // dev frontend
-        'https://powergenius.vercel.app', // prod frontend
-      ];
-  
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
+    origin: 'http://powergenius.vercel.app', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, 
   });
-  
 
 
 
