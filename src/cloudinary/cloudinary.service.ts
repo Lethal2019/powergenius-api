@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import { Express } from 'express'; 
+
 @Injectable()
 export class CloudinaryService {
   constructor() {
@@ -10,30 +12,32 @@ export class CloudinaryService {
     });
   }
 
-  async uploadImage(file: Express.Multer.File): Promise<string> {
+  async uploadImage(file: Express.Multer.File): Promise<string> { // ✅ Use Express.Multer.File
     const uploadOptions = {
-      folder: 'service_image', 
+      folder: 'service_image',
     };
 
     return new Promise<string>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(uploadOptions, (error, result: UploadApiResponse) => {
         if (error) {
           reject(`Error uploading to Cloudinary: ${error.message}`);
+        } else {
+          resolve(result?.secure_url || '');
         }
-        resolve(result?.secure_url);  // `secure_url` comes from UploadApiResponse
       });
 
       if (file.buffer) {
-        // If the file is in memory (from Multer's memory storage), use the buffer
         uploadStream.end(file.buffer);
-      } else {
-        // Otherwise, use the file path (if file is saved on disk)
+      } else if (file.path) {
         cloudinary.uploader.upload(file.path, uploadOptions, (error, result: UploadApiResponse) => {
           if (error) {
             reject(`Error uploading to Cloudinary: ${error.message}`);
+          } else {
+            resolve(result?.secure_url || '');
           }
-          resolve(result?.secure_url);
         });
+      } else {
+        reject('No file buffer or path found.');
       }
     });
   }
