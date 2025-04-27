@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
-
 @Injectable()
 export class CloudinaryService {
   constructor() {
@@ -13,7 +12,7 @@ export class CloudinaryService {
 
   async uploadImage(file: Express.Multer.File): Promise<string> {
     const uploadOptions = {
-      folder: 'profile_images', // Optional folder for organizing images on Cloudinary
+      folder: 'service_image', // Optional folder for organizing images on Cloudinary
     };
 
     return new Promise<string>((resolve, reject) => {
