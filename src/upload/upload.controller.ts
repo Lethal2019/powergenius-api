@@ -2,6 +2,7 @@ import { Controller, Post, UploadedFile, UseInterceptors, Req } from '@nestjs/co
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { Public } from 'src/auth/SkipAuth';
+import { Express } from 'express';
 
 @Controller('upload')
 export class UploadController {
