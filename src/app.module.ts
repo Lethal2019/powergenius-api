@@ -8,6 +8,8 @@ import { ProjectsModule } from './projects/projects.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { CloudinaryService } from './cloudinary/cloudinary.service';
+import { UploadController } from './upload/upload.controller';
 
 @Module({
   imports: 
@@ -33,7 +35,7 @@ import { FeedbackModule } from './feedback/feedback.module';
     AuthModule,
     FeedbackModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, UploadController],
+  providers: [AppService, CloudinaryService],
 })
 export class AppModule {}

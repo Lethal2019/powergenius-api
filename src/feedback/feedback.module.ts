@@ -3,7 +3,6 @@ import { FeedbackService } from './feedback.service';
 import { FeedbackController } from './feedback.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Feedback } from './feedback.entity';
-import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports:[
