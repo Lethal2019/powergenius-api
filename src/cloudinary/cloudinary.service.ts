@@ -12,7 +12,7 @@ export class CloudinaryService {
 
   async uploadImage(file: Express.Multer.File): Promise<string> {
     const uploadOptions = {
-      folder: 'service_image', // Optional folder for organizing images on Cloudinary
+      folder: 'service_image', 
     };
 
     return new Promise<string>((resolve, reject) => {

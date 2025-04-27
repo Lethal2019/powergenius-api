@@ -9,8 +9,7 @@ import {
     HttpCode, 
     HttpStatus, 
     UseInterceptors, 
-    UploadedFile, 
-    ParseIntPipe
+    UploadedFile
   } from '@nestjs/common';
   import { ServicesService } from './services.service';
   import { Services } from './service.entity';
