@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Projects } from './projects.entity';
 import { Repository } from 'typeorm';
 import { ProjectImage } from './projectsImage.entity';
+import { Express } from "express";
 
 @Injectable()
 export class ProjectsService {
