@@ -12,24 +12,22 @@ export class CloudinaryService {
     });
   }
 
-  async uploadImage(file: Express.Multer.File): Promise<string> { // ✅ Use Express.Multer.File
-    const uploadOptions = {
-      folder: 'service_image',
-    };
-
+  async uploadImage(file: Express.Multer.File, folder = 'general'): Promise<string> {
+    const uploadOptions = { folder };
+  
     return new Promise<string>((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(uploadOptions, (error, result: UploadApiResponse) => {
+      const uploadStream = cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
         if (error) {
           reject(`Error uploading to Cloudinary: ${error.message}`);
         } else {
           resolve(result?.secure_url || '');
         }
       });
-
+  
       if (file.buffer) {
         uploadStream.end(file.buffer);
       } else if (file.path) {
-        cloudinary.uploader.upload(file.path, uploadOptions, (error, result: UploadApiResponse) => {
+        cloudinary.uploader.upload(file.path, uploadOptions, (error, result) => {
           if (error) {
             reject(`Error uploading to Cloudinary: ${error.message}`);
           } else {
@@ -41,4 +39,5 @@ export class CloudinaryService {
       }
     });
   }
+  
 }
