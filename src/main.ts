@@ -20,6 +20,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://powergeniusengineering.vercel.app',
+      'https://power-genius.vercel.app',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
