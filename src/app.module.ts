@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { UploadController } from './upload/upload.controller';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: 
@@ -33,7 +35,9 @@ import { UploadController } from './upload/upload.controller';
     ProjectsModule,
     UserModule,
     AuthModule,
-    FeedbackModule
+    FeedbackModule,
+    CloudinaryModule,
+    UploadModule
   ],
   controllers: [AppController, UploadController],
   providers: [AppService, CloudinaryService],

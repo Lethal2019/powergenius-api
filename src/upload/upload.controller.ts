@@ -1,3 +1,4 @@
+// src/upload/upload.controller.ts
 import {
   Controller,
   Post,
@@ -18,7 +19,7 @@ export class UploadController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
   @Public()
-  @Post('project')  // Handles multiple file uploads with additional data
+  @Post('project') // Handles multiple file uploads with additional data
   @UseInterceptors(FilesInterceptor('files', 6))
   async uploadProjectFiles(
     @UploadedFiles() files: Express.Multer.File[],
@@ -31,11 +32,11 @@ export class UploadController {
     try {
       const imageUrls = [];
       for (const file of files) {
+        // Correctly calls CloudinaryService with a folder
         const imageUrl = await this.cloudinaryService.uploadImage(file, 'project_images');
         imageUrls.push(imageUrl);
       }
 
-      // You can now use body.project_name and body.project_description
       return {
         success: true,
         message: 'Project images uploaded successfully',
@@ -51,7 +52,7 @@ export class UploadController {
   }
 
   @Public()
-  @Post('service')  // Single file upload for service images
+  @Post('service') // Single file upload for service images
   @UseInterceptors(FileInterceptor('file'))
   async uploadServiceFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
@@ -59,6 +60,7 @@ export class UploadController {
     }
 
     try {
+      // Correctly calls CloudinaryService with a folder
       const imageUrl = await this.cloudinaryService.uploadImage(file, 'service_images');
       return {
         success: true,

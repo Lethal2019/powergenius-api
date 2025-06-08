@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Projects } from './projects.entity';
 import { Repository } from 'typeorm';
 import { ProjectImage } from './projectsImage.entity';
-import { Express } from "express";
 
 @Injectable()
 export class ProjectsService {
@@ -29,13 +28,22 @@ export class ProjectsService {
     return project;
   }
 
-  async create(data: Partial<Projects>, imageFiles: Express.Multer.File[]): Promise<Projects> {
-    const project = this.projectsRepository.create(data);
+  async create(data: {
+    project_name: string;
+    project_description: string;
+    imageUrls: string[];
+  }): Promise<Projects> {
+    const { project_name, project_description, imageUrls } = data;
+
+    const project = this.projectsRepository.create({
+      project_name,
+      project_description,
+    });
     const savedProject = await this.projectsRepository.save(project);
 
-    const images = imageFiles.map((file) =>
+    const images = imageUrls.map((url) =>
       this.projectImageRepository.create({
-        url: `/uploads/${file.filename}`,
+        url,
         project: savedProject,
       }),
     );
@@ -44,20 +52,26 @@ export class ProjectsService {
     return this.findOne(savedProject.id);
   }
 
-  async update(id: number, data: Partial<Projects>, imageFiles?: Express.Multer.File[]): Promise<Projects> {
+  async update(id: number, data: {
+    project_name?: string;
+    project_description?: string;
+    imageUrls?: string[];
+  }): Promise<Projects> {
     const project = await this.findOne(id);
 
-    // Update project fields
-    Object.assign(project, data);
+    // Update text fields
+    if (data.project_name) project.project_name = data.project_name;
+    if (data.project_description) project.project_description = data.project_description;
+
     await this.projectsRepository.save(project);
 
-    // Optional: remove old images if you're replacing
-    if (imageFiles?.length) {
+    // Replace images if provided
+    if (data.imageUrls && data.imageUrls.length > 0) {
       await this.projectImageRepository.delete({ project: { id } });
 
-      const newImages = imageFiles.map((file) =>
+      const newImages = data.imageUrls.map((url) =>
         this.projectImageRepository.create({
-          url: `/uploads/${file.filename}`,
+          url,
           project,
         }),
       );
