@@ -20,14 +20,12 @@ export class AuthController {
     return req.user;
   }
 
-  // --- New: Request Password Reset ---
   @Public()
   @Post('forgot-password')
   async forgotPassword(@Body() body: { email: string }) {
     return this.authService.sendPasswordResetEmail(body.email);
   }
 
-  // --- New: Reset Password ---
   @Public()
   @Post('reset-password')
   async resetPassword(@Body() body: { token: string; newPassword: string }) {

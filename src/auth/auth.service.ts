@@ -11,7 +11,7 @@ export class AuthService {
         private jwtService: JwtService
     ){}
 
-    async signIn(username: string, pass: string): Promise<{ access_token: string}> {
+    async signIn(username: string, pass: string): Promise<{ access_token: string, user: Partial<User>}> {
         const user = await this.userService.findOne(username);
 
         if (!user) {
@@ -26,8 +26,11 @@ export class AuthService {
         }
         const payload = { sub: user.id, username: user.username };
 
+        const {password, ...userWithoutPassword} = user;
+
         return {
             access_token: await this.jwtService.signAsync(payload),
+            user: userWithoutPassword,
         };
     }
 
@@ -40,7 +43,6 @@ export class AuthService {
           { expiresIn: '15m' }
         );
 
-        // Send token via email (for now, just return it)
     // Integrate with an email service like nodemailer or SendGrid
     console.log(`Password reset link: http://localhost:3000/reset-password?token=${token}`);
 
