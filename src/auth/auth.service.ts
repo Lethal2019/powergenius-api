@@ -26,7 +26,13 @@ export class AuthService {
         }
         const payload = { sub: user.id, username: user.username };
 
-        const {password, ...userWithoutPassword} = user;
+        console.log("Returning user:", user);
+        const { password, ...userWithoutPassword } = user ?? {};
+        return {
+          access_token: await this.jwtService.signAsync(payload),
+          user: userWithoutPassword,
+        };
+
 
         return {
             access_token: await this.jwtService.signAsync(payload),
